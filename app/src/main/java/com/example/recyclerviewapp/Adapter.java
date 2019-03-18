@@ -16,6 +16,9 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
+
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     private static final String TAG = "Adapter";
 
@@ -49,7 +52,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: clicked on: " + mImageNames.get(i));
+                if (mImageNames.get(i)=="Nibiru") {
+                    Toast.makeText(mContext, "The earth is flat!!", Toast.LENGTH_LONG).show();
+                } else
+                    Log.d(TAG, "onClick: clicked on: " + mImageNames.get(i));
                 Toast.makeText(mContext, mImageNames.get(i), Toast.LENGTH_SHORT).show();
             }
         });
@@ -63,7 +69,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView image;
+        CircleImageView image;
         TextView imageName;
         RelativeLayout parentLayout;
 
