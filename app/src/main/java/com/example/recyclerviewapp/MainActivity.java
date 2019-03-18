@@ -1,10 +1,13 @@
 package com.example.recyclerviewapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView textViewResult;
 
+    Button buttonApi;
+
     private ArrayList<String> mNames = new ArrayList<>();
     private ArrayList<String> mImageURL = new ArrayList<>();
 
@@ -32,40 +37,18 @@ public class MainActivity extends AppCompatActivity {
         initImageBitMaps();
 
         textViewResult = findViewById(R.id.text_view_result);
+        buttonApi = (Button) findViewById(R.id.buttonAPI);
 
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(Api.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
-
-        Api api = retrofit.create(Api.class);
-
-        Call<List<EmployersAPI>> call = api.getEmployeers();
-
-        call.enqueue(new Callback<List<EmployersAPI>>() {
+        buttonApi.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<List<EmployersAPI>> call, Response<List<EmployersAPI>> response) {
-                if (!response.isSuccessful()) {
-                    textViewResult.setText("Code: " + response.code());
-                    return;
-                }
-                List<EmployersAPI> employersAPIS = response.body();
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ApiActivity.class);
+                startActivity(intent);
 
-                for (EmployersAPI employee : employersAPIS) {
-                    String content = "";
-                    content += "Id" + employee.getId() + "\n";
-                    content += "Employee name: " + employee.getEmployee_name() + "\n";
-                    content += "Employee age: " + employee.getEmployee_age() + "\n";
-                    content += "Salary: " + employee.getSalary() + "\n";
-                    content += "Profile image: " + employee.getProfile_image() + "\n\n";
-
-                    textViewResult.append(content);
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<EmployersAPI>> call, Throwable t) {
-                textViewResult.setText(t.getMessage());
             }
         });
+
+
     }
 
 

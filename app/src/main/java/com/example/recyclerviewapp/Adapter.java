@@ -22,9 +22,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     private static final String TAG = "Adapter";
 
-    private ArrayList<String> mImageNames = new ArrayList<>();
+    private ArrayList<String> mImageNames = new ArrayList<>(); //lista przechowująca kolejno nazwy obrazów i linki url do obrazów
     private ArrayList<String> mImages = new ArrayList<>();
-    private Context mContext;
+    private Context mContext;//definiujemy obiekt adapter, tworzymy konstruktor
 
     public Adapter(Context mContext, ArrayList<String> mImageNames, ArrayList<String> mImages) {
         this.mImageNames = mImageNames;
@@ -35,14 +35,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     @NonNull
     @Override
 
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {//tworzymy uogólniony "trzymacz widoku" dla każdego ładowanego z listy obrazu
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_listitem, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return viewHolder; //zwracamy widok
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) { //powiązanie "trzymacza widoku" z obrazami, użycie biblioteki glide
         Log.d(TAG, "onBindViewHolder: called");
 
         Glide.with(mContext)
@@ -52,7 +52,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mImageNames.get(i)=="Nibiru") {
+                if (mImageNames.get(i).equals("Nibiru")) {
                     Toast.makeText(mContext, "The earth is flat!!", Toast.LENGTH_LONG).show();
                 } else
                     Log.d(TAG, "onClick: clicked on: " + mImageNames.get(i));
@@ -63,7 +63,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemCount() { //zwraca rozmiar listy
         return mImageNames.size();
     }
 
