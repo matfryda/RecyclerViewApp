@@ -5,11 +5,21 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+
+    private TextView textViewResult;
 
     private ArrayList<String> mNames = new ArrayList<>();
     private ArrayList<String> mImageURL = new ArrayList<>();
@@ -20,7 +30,44 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Started");
         initImageBitMaps();
+
+        textViewResult = findViewById(R.id.text_view_result);
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(Api.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
+
+        Api api = retrofit.create(Api.class);
+
+        Call<List<EmployersAPI>> call = api.getEmployeers();
+
+        call.enqueue(new Callback<List<EmployersAPI>>() {
+            @Override
+            public void onResponse(Call<List<EmployersAPI>> call, Response<List<EmployersAPI>> response) {
+                if (!response.isSuccessful()) {
+                    textViewResult.setText("Code: " + response.code());
+                    return;
+                }
+                List<EmployersAPI> employersAPIS = response.body();
+
+                for (EmployersAPI employee : employersAPIS) {
+                    String content = "";
+                    content += "Id" + employee.getId() + "\n";
+                    content += "Employee name: " + employee.getEmployee_name() + "\n";
+                    content += "Employee age: " + employee.getEmployee_age() + "\n";
+                    content += "Salary: " + employee.getSalary() + "\n";
+                    content += "Profile image: " + employee.getProfile_image() + "\n\n";
+
+                    textViewResult.append(content);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<EmployersAPI>> call, Throwable t) {
+                textViewResult.setText(t.getMessage());
+            }
+        });
     }
+
 
     private void initImageBitMaps() {
         Log.d(TAG, "initImageBitMaps: preparing bitmaps");
